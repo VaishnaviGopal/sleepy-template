@@ -1,47 +1,26 @@
 
 # Independent sleep resource
-resource "null_resource" "resource_1" {
-  provisioner "local-exec" {
-    command = "echo 'Independent resource sleeping...' && sleep 5"
-  }
-
-  triggers = {
-    resource_id = timestamp()
-  }
+resource "time_sleep" "sleep_1" {
+  create_duration = "5s"
 }
 
-resource "null_resource" "resource_2" {
-  provisioner "local-exec" {
-    command = "echo 'Second resource sleeping...' && sleep 5"
-  }
+# Second sleep resource depends on the first
+resource "time_sleep" "sleep_2" {
+  create_duration = "5s"
 
-  depends_on = [null_resource.resource_1]
-
-  triggers = {
-    resource_id = timestamp()
-  }
+  depends_on = [time_sleep.sleep_1]
 }
 
-resource "null_resource" "resource_3" {
-  provisioner "local-exec" {
-    command = "echo 'Third resource sleeping...' && sleep 5"
-  }
+# Third sleep resource depends on the second
+resource "time_sleep" "sleep_3" {
+  create_duration = "5s"
 
-  depends_on = [null_resource.resource_2]
-
-  triggers = {
-    resource_id = timestamp()
-  }
+  depends_on = [time_sleep.sleep_2]
 }
 
-resource "null_resource" "resource_4" {
-  provisioner "local-exec" {
-    command = "echo 'Fourth resource sleeping...' && sleep 5"
-  }
+# Fourth sleep resource depends on the third
+resource "time_sleep" "sleep_4" {
+  create_duration = "5s"
 
-  depends_on = [null_resource.resource_3]
-
-  triggers = {
-    resource_id = timestamp()
-  }
+  depends_on = [time_sleep.sleep_3]
 }
